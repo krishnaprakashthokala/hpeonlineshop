@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    layout:decorator="admin/dashboard/product/create">
+    <head>
+        <title th:text="#{admin.product.edit.title}">Edit Product</title>
+        <link rel="stylesheet" type="text/css" th:href="@{/assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/assets/global/plugins/rateit/src/rateit.css}" />
+    </head>
+    <body>
+        <!-- BEGIN PAGE HEADER -->
+        <div layout:fragment="page-header">
+            <h3 class="page-title">
+                <span th:text="#{admin.product.edit.title}">Edit Product</span>
+                <small th:text="#{admin.product.edit.subtitle}">Product edition</small>
+            </h3>
+            <div class="page-bar">
+                <th:block th:include="admin/fragments/header::breadcrumb(${ {{url:'admin/home',text:'breadcrumb.home'},{url:'admin/products',text:'breadcrumb.products.all'},{url:'admin/products',text:'breadcrumb.products.edit'}} })"/>
+            </div>
+        </div>
+        <!-- BEGIN ADDITIONAL TABS -->
+        <th:block layout:fragment="additional-tabs">
+            <li>
+                <a href="#tab_reviews" data-toggle="tab">
+                    <span th:text="#{admin.product.edit.tabs.title.reviews}">Reviews</span>
+                    <span class="badge badge-success" th:if="${newReviews}" th:text="${newReviews}">0</span>
+                </a>
+            </li>
+        </th:block>
+        <!-- END ADDITIONAL TABS -->
+        <!-- BEGIN ADDITIONAL TAB PANELS -->
+        <th:block layout:fragment="additional-tab-panels">
+            <div class="tab-pane" id="tab_reviews"
+                 th:include="admin/fragments/product/reviews::table(@{/admin/products/{id}/reviews(id=${product.id})})"></div>
+        </th:block>
+        <!-- END ADDITIONAL TAB PANELS -->
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <th:block layout:fragment="additional-page-plugins">
+            <script type="text/javascript" th:src="@{/assets/global/plugins/datatables/media/js/jquery.dataTables.min.js}"></script>
+            <script type="text/javascript" th:src="@{/assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js}"></script>
+            <script type="text/javascript" th:src="@{/assets/global/plugins/jquery.spring-friendly.min.js}"></script>
+            <script type="text/javascript" th:src="@{/assets/global/plugins/rateit/src/jquery.rateit.js}" ></script>
+        </th:block>
+        <!-- BEGIN PAGE LEVEL SCRIPTS -->
+        <th:block layout:fragment="additional-page-scripts">
+            <script type="text/javascript" th:src="@{/assets/global/scripts/datatable.js}"></script>
+            <script type="text/javascript" th:src="@{/assets/admin/pages/scripts/ecommerce-products-edit.js}"></script>
+        </th:block>
+        <!-- END PAGE LEVEL SCRIPTS -->
+        <th:block layout:fragment="additional-init-script">
+            <script type="text/javascript">
+                jQuery(document).ready(function () {
+                    EcommerceProductsEdit.init();
+                });
+            </script>
+        </th:block>
+        
+    </body>
+</html>

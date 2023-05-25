@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org" >
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        
+        <!-- Product Categories Fragment -->
+        <th:block th:fragment="categories">
+            <div class="header-navigation-content">
+                <div class="row">
+                    <div class="col-md-4 header-navigation-col" th:each="category: ${categories}">
+                        <h4 th:text="${category.name}">Category</h4>
+                        <ul>
+                            <li th:each="subcategory: ${category.subcategories}">
+                                <a th:href="@{/products/categories/{category}(category = ${subcategory.slug})}" th:text="${subcategory.name}">Subcategory</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+        
+        <!-- arrivals -->
+        <th:block th:fragment="arrivals">
+            <div class="header-navigation-content">
+                <div class="row">
+                    <div class="col-md-3 col-sm-4 col-xs-6" 
+                        th:each="product: ${newproducts}"
+                        th:include="frontend/fragments/product/detail::simple-card">
+                    </div>
+                </div>
+            </div>
+        </th:block>
+        
+        <!-- Menu Search -->
+        <th:block th:fragment="menu-search">
+            <span class="sep"></span>
+            <i class="fa fa-search search-btn"></i>
+            <div class="search-box">
+                <form th:action="@{/products/search}">
+                    <div class="input-group">
+                        <input type="search" name="query" class="form-control" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="submit" th:text="#{common.btns.search}">Search</button>
+                        </span>
+                    </div>
+                </form>
+            </div> 
+        </th:block>
+               <!-- BEGIN HEADER -->
+       
+        <div th:fragment="header" class="header">
+        
+            <div class="container">
+                <a class="site-logo" th:href="@{/home}">
+        <img src="@{/assets/frontend/layout/img/logos/hpe.png}" alt="HPE Online Shop UI">
+                
+                 <!--     <img src="@{/assets/frontend/layout/img/logos/logo-shop-red.png}" alt="HPE Online Shop UI">
+                
+                --></a>
+                <a href="javascript:void(0);" class="mobi-toggler"><i class="fa fa-bars"></i></a>
+                <!-- BEGIN CART -->
+                <div class="top-cart-block" th:with="items = ${@cartService.getAllItem()}">
+                    <div class="top-cart-info">
+                        <a th:href="@{/shopping-cart}" class="top-cart-info-count" th:text="#{frontend.cart.total.products(${items.size()})}">3 items</a>
+                        <a th:href="@{/shopping-cart}" class="top-cart-info-value"  th:if="${not #lists.isEmpty(items)}"
+                           th:with="subTotal = ${#aggregates.sum(items.![totalPrice])}" th:text="${subTotal}">1260<span>&euro;</span></a>
+                    </div>
+                    <i class="fa fa-shopping-cart"></i>
+                    <div class="top-cart-content-wrapper">
+                        <div class="top-cart-content">
+                            <ul class="scroller" style="height: 250px;">
+                                <li th:each="item:${items}">
+                                    <a th:href="@{/products/detail/{line}(line=${item.productLine.id})}">
+                                        <img th:src="@{/images/products/{image}(image=${item.productLine.image})}" th:alt="${item.productLine.description}" width="37" height="34">
+                                    </a>
+                                    <span class="cart-content-count">x<span th:text="${item.quantity}">1</span></span>
+                                    <strong><a th:href="@{/products/detail/{line}(line=${item.productLine.id})}" th:text="${item.productLine.product.name}">Product Name</a></strong>
+                                    <em><span th:text="${item.totalPrice}">1230</span><span>&euro;</span></em>
+                                </li>
+                            </ul>
+                            <div class="text-right">
+                                <a th:href="@{/shopping-cart}" class="btn btn-default" th:text="#{common.btns.view.cart}">View Cart</a>
+                                <a th:href="@{/checkout}" th:if="${not #lists.isEmpty(items)}" class="btn btn-primary" th:text="#{common.btns.checkout}">Checkout</a>
+                            </div>
+                        </div>
+                    </div>            
+                </div>
+                <!--END CART -->
+
+                <!-- BEGIN NAVIGATION -->
+                <div class="header-navigation">
+                    <ul>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="javascript:;" th:text="#{navigation.woman.title}">Woman</a>
+                            <!-- BEGIN DROPDOWN MENU -->
+                            <ul class="dropdown-menu">
+                                <li th:include="this::categories"></li>
+                            </ul>
+                            <!-- END DROPDOWN MENU -->
+                        </li>
+                        <li class="dropdown dropdown-megamenu">
+                            <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="javascript:;" th:text="#{navigation.man.title}">Man</a>
+                            <ul class="dropdown-menu">
+                                <li th:include="this::categories"></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown dropdown100 nav-catalogue">
+                            <a class="dropdown-toggle" 
+                               data-toggle="dropdown" 
+                               data-target="#" 
+                               href="javascript:;" 
+                               th:text="#{navigation.new.title}">New</a>
+                            <ul class="dropdown-menu">
+                                <li th:include="this::arrivals"></li>
+                            </ul>
+                        </li>
+                        <!-- BEGIN TOP SEARCH -->
+                        <li class="menu-search" th:include="this::menu-search"></li>
+                        <!-- END TOP SEARCH -->
+                    </ul>
+                </div>
+                <!-- END NAVIGATION -->
+            </div>
+        </div>
+        <!-- Header END -->
+    </body>
+</html>

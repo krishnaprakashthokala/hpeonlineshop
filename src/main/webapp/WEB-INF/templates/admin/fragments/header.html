@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <!-- BEGIN HEADER -->
+        <th:block th:fragment="header">
+            <div class="page-header -i navbar navbar-fixed-top">
+                <!-- BEGIN HEADER INNER -->
+                <div class="page-header-inner">
+                    <!-- BEGIN LOGO -->
+                    <div class="page-logo">
+                        <a th:href="@{/admin/home}">
+                            <img th:src="@{/assets/admin/layout/img/logo.png}" alt="logo" class="logo-default"/>
+                        </a>
+                        <div class="menu-toggler sidebar-toggler hide">
+                        </div>
+                    </div>
+                    <!-- END LOGO -->
+                    <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+                    <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+                    </a>
+                    <!-- END RESPONSIVE MENU TOGGLER -->
+                    <!-- BEGIN TOP NAVIGATION MENU -->
+                    <div class="top-menu">
+                        <ul class="nav navbar-nav pull-right">
+                            <!-- BEGIN NOTIFICATION DROPDOWN -->
+                            <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                            <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+                                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                    <i class="icon-bell"></i>
+                                    <span class="badge badge-default">
+                                        7 </span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="external">
+                                        <h3><span class="bold">12 pending</span> notifications</h3>
+                                        <a href="extra_profile.html">view all</a>
+                                    </li>
+                                    <li>
+                                        <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
+                                            <li>
+                                                <a href="javascript:;">
+                                                    <span class="time">just now</span>
+                                                    <span class="details">
+                                                        <span class="label label-sm label-icon label-success">
+                                                            <i class="fa fa-plus"></i>
+                                                        </span>
+                                                        New user registered. </span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- END NOTIFICATION DROPDOWN -->
+                            <!-- BEGIN USER LOGIN DROPDOWN -->
+                            <li class="dropdown dropdown-user">
+                                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                    <img alt="" class="img-circle" th:if="${#authentication.principal.avatar == null}" th:src="@{/assets/global/img/user_default.png}"/>
+                                    <img th:alt="${#authentication.principal.fullName}" class="img-circle" th:if="${#authentication.principal.avatar != null}" th:src="@{/admin/users/self/avatar/{id}(id=${#authentication.principal.avatar.id})}"/>
+                                    <span class="username username-hide-on-mobile" sec:authentication="principal.fullName"></span>
+                                    <i class="fa fa-angle-down"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-default">
+                                    <li>
+                                        <a th:href="@{/admin/users/self}">
+                                            <i class="icon-user"></i>
+                                            <span th:text="#{admin.header.user.dropdown.profile}">My Profile</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="page_calendar.html">
+                                            <i class="icon-calendar"></i> My Calendar </a>
+                                    </li>
+                                    <li class="divider">
+                                    </li>
+                                    <li>
+                                        <a href="extra_lock.html">
+                                            <i class="icon-lock"></i> Lock Screen </a>
+                                    </li>
+                                    <li>
+                                        <form th:action="@{/admin/logout}" method="post" id="logoutForm" style="display: none;">
+                                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                        </form>
+                                        <a href="javascript:GlobalSettings.doLogout()">
+                                            <i class="icon-key"></i> 
+                                            <span th:text="#{admin.header.user.dropdown.logout}">Log Out</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- END USER LOGIN DROPDOWN -->
+                        </ul>
+                    </div>
+                    <!-- END TOP NAVIGATION MENU -->
+                </div>
+                <!-- END HEADER INNER -->
+            </div>
+            <!-- END HEADER -->
+        </th:block>
+        
+        
+        <th:block th:fragment="breadcrumb(path)">
+            <ul class="page-breadcrumb">
+                <li th:each="item, iterStat:${path}">
+                    <i class="fa fa-home"></i>
+                    <a href="#" th:href="@{${item.url}}" th:text="#{${item.text}}">item</a>
+                    <i th:if="${!iterStat.last}" class="fa fa-angle-right"></i>
+                </li>
+            </ul>
+        </th:block>
+    </body>
+</html>

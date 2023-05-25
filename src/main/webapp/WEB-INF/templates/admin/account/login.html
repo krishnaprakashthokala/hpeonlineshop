@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    layout:decorator="admin/account/layout">
+    <head>
+        <title th:text="#{admin.login.title}">Admin Login</title>
+        <!-- BEGIN PAGE LEVEL STYLES -->
+        <th:block layout:fragment="page-styles">
+            <link th:href="@{/assets/global/plugins/select2/select2.css}" rel="stylesheet" type="text/css"/>
+            <link th:href="@{/assets/admin/pages/css/login-soft.css}" rel="stylesheet" type="text/css"/>
+        </th:block>
+        <!-- END PAGE LEVEL STYLES -->
+    </head>
+    <body>
+        <th:block layout:fragment="content">
+            <!-- BEGIN LOGIN -->
+            <div class="content">
+                <!-- BEGIN LOGIN FORM -->
+                <form class="login-form" name="f" th:action="@{/admin/login}" method="post">
+                    <h3 class="form-title" th:text="#{admin.login.form.legend}">Login Admin</h3>
+                    <th:block th:include="global/fragments/login::alerts" />
+                    <div class="alert alert-danger display-hide">
+                        <button class="close" data-close="alert"></button>
+                        <span th:text="#{admin.login.form.alert}">Enter any username and password.</span>
+                    </div>
+                    <div class="form-group">
+                        <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+                        <label class="control-label visible-ie8 visible-ie9" th:text="#{admin.login.form.username.label}">Username</label>
+                        <div class="input-icon">
+                            <i class="fa fa-user"></i>
+                            <input class="form-control placeholder-no-fix" type="text" autocomplete="off" th:placeholder="#{admin.login.form.username.placeholder}" name="username"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label visible-ie8 visible-ie9" th:text="#{admin.login.form.password.label}">Password</label>
+                        <div class="input-icon">
+                            <i class="fa fa-lock"></i>
+                            <input class="form-control placeholder-no-fix" type="password" autocomplete="off" th:placeholder="#{admin.login.form.password.placeholder}" name="password"/>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <label class="checkbox">
+                            <input type="checkbox" name="remember-me" />
+                            <span th:text="#{admin.login.form.remember}">Remember me</span>
+                        </label>
+                        <button type="submit" class="btn blue pull-right">
+                            Login <i class="m-icon-swapright m-icon-white"></i>
+                        </button>
+                    </div>
+                    <div class="forget-password">
+                        <h4 th:text="#{admin.login.form.forgot.password}">Forgot your password ?</h4>
+                        <p th:utext="#{admin.login.form.forgot.password.link}"></p>
+                    </div>
+                </form>
+                <!-- END LOGIN FORM -->
+                <!-- BEGIN FORGOT PASSWORD FORM -->
+                <form class="forget-form" action="index.html" method="post">
+                    <h3 th:text="#{admin.forgot.password.form.title}">Forget Password ?</h3>
+                    <p th:text="#{admin.forgot.password.form.subtitle}">Enter your e-mail address below to reset your password.</p>
+                    <div class="form-group">
+                        <div class="input-icon">
+                            <i class="fa fa-envelope"></i>
+                            <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" name="email"/>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="back-btn" class="btn">
+                            <i class="m-icon-swapleft"></i> 
+                            <span th:text="#{admin.forgot.password.form.back}">Back</span>
+                        </button>
+                        <button type="submit" class="btn blue pull-right">
+                            <span th:text="#{admin.forgot.password.form.submit}">Submit</span>
+                            <i class="m-icon-swapright m-icon-white"></i>
+                        </button>
+                    </div>
+                </form>
+                <!-- END FORGOT PASSWORD FORM -->
+            </div>
+        </th:block>
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <th:block layout:fragment="page-plugins">
+            <script th:src="@{/assets/global/plugins/jquery-validation/js/jquery.validate.min.js}" type="text/javascript"></script>
+            <script th:src="@{/assets/global/plugins/select2/select2.min.js}" type="text/javascript"></script>
+        </th:block>
+        <!-- END PAGE LEVEL PLUGINS -->
+        <!-- BEGIN PAGE LEVEL SCRIPTS -->
+        <th:block layout:fragment="page-scripts">
+            <script th:src="@{/assets/admin/pages/scripts/login-soft.js}" type="text/javascript"></script>
+        </th:block>
+        <!-- END PAGE LEVEL SCRIPTS -->
+        <th:block layout:fragment="init-script">
+            <script type="text/javascript">
+                jQuery(document).ready(function(){
+                    Login.init();
+                });
+            </script>
+        </th:block>
+    </body>
+</html>

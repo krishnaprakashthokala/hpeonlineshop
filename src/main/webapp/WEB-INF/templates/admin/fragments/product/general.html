@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+    <th:block th:fragment="form">
+        <div class="form-body">
+            <div class="form-group">
+                <label class="col-md-2 control-label">
+                    <span th:text="#{admin.product.form.name.label}">Name</span>:<span class="required">*</span>
+                </label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" th:field="*{name}" th:placeholder="#{admin.product.form.name.placeholder}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">
+                    <span th:text="#{admin.product.form.description.label}">Description</span>:<span class="required">*</span>
+                </label>
+                <div class="col-md-10">
+                    <textarea class="form-control maxlength-handler" rows="5" th:field="*{description}" maxlength="300"></textarea>
+                    <span class="help-block" th:text="#{admin.product.form.description.help}">max 300 chars</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">
+                    <span th:text="#{admin.product.form.category.label}">Categories</span>:<span class="required">*</span>
+                </label>
+                <div class="col-md-10">
+                    <div class="form-control height-auto">
+                        <div class="scroller" style="height:275px;" data-always-visible="1">
+                            <ul class="list-unstyled">
+                                <li th:each="category: ${categories}">
+                                    <span th:text="${category.name}">Category Name</span>
+                                    <ul class="list-unstyled">
+                                        <li th:each="subcategory: ${category.subcategories}">
+                                            <label>
+                                                <input type="radio" th:field="*{category}" th:value="${subcategory.id}" />
+                                                <span th:text="${subcategory.name}">Footwear</span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <span class="help-block" th:text="#{admin.product.form.category.help}"> select one or more categories </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">
+                    <span th:text="#{admin.product.form.short.description.label}">Short Description</span>:<span class="required">*</span>
+                </label>
+                <div class="col-md-10">
+                    <textarea class="form-control maxlength-handler" rows="5" th:field="*{shortDescription}" maxlength="200"></textarea>
+                    <span class="help-block" th:text="#{admin.product.form.short.description.help}">shown in product listing</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">
+                    <span th:text="#{admin.product.form.avaliabledate.label}">Available Date</span>:<span class="required">*</span>
+                </label>
+                <div class="col-md-10">
+                    <div class="input-group input-large date-picker input-daterange">
+                        <input type="text" class="form-control" th:field="*{availableFrom}" >
+                        <span class="input-group-addon">to</span>
+                        <input type="text" class="form-control" th:field="*{availableTo}">
+                    </div>
+                    <span class="help-block" th:text="#{admin.product.form.avaliabledate.help}">availability daterange.</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">
+                    <span th:text="#{admin.product.form.price.label}">Price</span>:<span class="required">*</span>
+                </label>
+                <div class="col-md-10">
+                    <input type="number" step="0.01" min="0.0" max="999.99" class="form-control" th:field="*{price}" th:placeholder="#{admin.product.form.price.placeholder}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">
+                    <span th:text="#{admin.product.form.status.label}">Status</span>:<span class="required">*</span>
+                </label>
+                <div class="col-md-10">
+                    <select class="table-group-action-input form-control input-medium"  th:field="*{status}">
+                        <option th:each="state : ${T(org.ecommerce.persistence.models.ProductStatusEnum).values()}"
+                                th:value="${state}" 
+                                th:text="${state}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">
+                    <span th:text="#{admin.product.form.consumer.label}">Consumer Type</span>:<span class="required">*</span>
+                </label>
+                <div class="col-md-10">
+                    <select class="table-group-action-input form-control input-medium"  th:field="*{consumerType}">
+                        <option th:each="consumerType : ${T(org.ecommerce.persistence.models.ConsumerTypeEnum).values()}"
+                                th:value="${consumerType}" 
+                                th:text="${consumerType}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

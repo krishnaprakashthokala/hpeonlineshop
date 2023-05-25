@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <!-- BEGIN TOP BAR -->
+        <div th:fragment="topbar" class="pre-header">
+            <div class="container">
+                <div class="row">
+                    <!-- BEGIN TOP BAR LEFT PART -->
+                    <div class="col-md-6 col-sm-6 additional-shop-info">
+                        <ul class="list-unstyled list-inline">
+                            <li><i class="fa fa-phone"></i><span th:text="#{topbar.phone}">+1 456 6717</span></li>
+                            <!-- BEGIN CURRENCIES -->
+                            <li class="shop-currencies">
+                                <a href="javascript:void(0);">&dollar;</a>
+                                <a href="javascript:void(0);">&pound;</a>
+                                <a href="javascript:void(0);" class="current">&euro;</a>
+                            </li>
+                            <!-- END CURRENCIES -->
+                            <!-- BEGIN LANGS -->
+                            <li class="langs-block">
+                                <a href="javascript:void(0);" class="current" th:text="#{topbar.langs.spanish}">Spanish</a>
+                                <div class="langs-block-others-wrapper">
+                                    <div class="langs-block-others">
+                                        <a href="#" th:text="#{topbar.langs.english}">English</a>
+                                    </div>
+                                </div>
+                            </li>
+                            <!-- END LANGS -->
+                        </ul>
+                    </div>
+                    <!-- END TOP BAR LEFT PART -->
+                    <!-- BEGIN TOP BAR MENU -->
+                    <div class="col-md-6 col-sm-6 additional-nav">
+                        <ul class="list-unstyled list-inline pull-right">
+                            <li><a href="#" sec:authorize="isAuthenticated()" th:text="#{topbar.myaccount}">My Account</a></li>
+                            <li><a href="#" th:text="#{topbar.checkout}" th:if="${ not @cartService.isEmpty() }">Checkout</a></li>
+                            <li><a href="#" th:href="@{/login}" sec:authorize="!isAuthenticated()" th:text="#{topbar.login}">Log In</a></li>
+                            <li sec:authorize="isAuthenticated()">
+                                <form th:action="@{/logout}" method="post" id="logoutForm" style="display: none;">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                </form>
+                                <a href="javascript:GlobalSettings.doLogout()">
+                                    <i class="icon-key"></i> 
+                                    <span th:text="#{topbar.logout}">Log Out</span>
+                                </a>
+                            </li>
+                            
+                            <li><a href="#" th:href="@{/admin/home}" sec:authorize="${hasRole(T(org.ecommerce.persistence.models.AuthorityEnum).ROLE_ADMIN)}" th:text="#{topbar.admin}">Admin</a></li>
+                        </ul>
+                    </div>
+                    <!-- END TOP BAR MENU -->
+                </div>
+            </div>        
+        </div>
+        <!-- END TOP BAR -->
+    </body>
+</html>

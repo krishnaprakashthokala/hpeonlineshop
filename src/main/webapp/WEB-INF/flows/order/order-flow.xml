@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <!-- Rol required for execute this flow -->
+    <secured attributes="ROLE_CONSUMER" />
+    
+    <var name="comingFrom" class="java.lang.String"/>
+    
+    <input name="order" type="org.ecommerce.persistence.models.Order"/>
+    
+    <on-start>
+        <set name="comingFrom" value="'shipToState'"/>
+    </on-start>
+    
+    <!-- Check if user has any address -->
+    <decision-state id="checkUserAddressesState">
+        <if test="userService.hasAddresses(currentUser.name)" 
+            then="shipToState" 
+            else="createAddressState" />
+    </decision-state>
+    
+    <!-- View state for create address -->
+    <view-state id="createAddressState" view="frontend/checkout/address">
+        <on-render>
+            <evaluate 
+                expression="countryService.getAll()"
+                result="viewScope.countries"/>
+            <evaluate expression="addressFormAction.setupForm"/>
+        </on-render>
+        <transition on="createAddress" to="backToPrevState">
+             <evaluate expression="addressFormAction.bindAndValidate"/>
+             <evaluate expression="saveAddressAction" />
+        </transition>
+        <transition on="cancelCreate" to="backToPrevState" />
+        <on-exit>
+            <evaluate expression="addressFormAction.resetForm" />
+        </on-exit>
+    </view-state>
+    
+    <decision-state id="backToPrevState">
+        <if test="comingFrom == 'shipToState'" then="shipToState" else="billToState"/>
+    </decision-state>
+    
+    <!-- View state select address for ship to -->
+    <view-state id="shipToState" view="frontend/checkout/shipTo">
+        <on-render>
+            <evaluate 
+                expression="userService.getAddresses(currentUser.name)"
+                result="viewScope.addresses" />
+	</on-render>
+        <transition on="addAddress" to="createAddressState">
+            <set name="comingFrom" value="'shipToState'"/>
+        </transition>
+        <transition on="confirmShipToAddress" to="billToState">
+            <evaluate expression="setShipAddressToOrder" />
+        </transition>
+    </view-state>
+    
+    <!-- View state select address for bill to -->
+    <view-state id="billToState" view="frontend/checkout/billTo">
+        <on-render>
+            <evaluate 
+                expression="userService.getAddresses(currentUser.name)"
+                result="viewScope.addresses" />
+	</on-render>
+        <transition on="addAddress" to="createAddressState">
+            <set name="comingFrom" value="'billToState'"/>
+        </transition>
+        <transition on="confirmBillToAddress" to="addProductsToOrderState">
+            <evaluate expression="setBillAddressToOrder" />
+        </transition>
+    </view-state>
+    
+    <!-- add all products to order -->
+    <action-state id="addProductsToOrderState">
+        <evaluate expression="addProductsToOrderAction"/>
+        <transition on="success" to="finishState" />
+    </action-state>
+    
+    <!-- Finish State return order -->
+    <end-state id="finishState">
+        <output name="order" value="flowScope.order" type="org.ecommerce.persistence.models.Order" />
+    </end-state>
+</flow>
